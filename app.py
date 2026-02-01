@@ -14,6 +14,34 @@ st.set_page_config(
     layout="centered"
 )
 
+# -----------------------------------------
+# AUTENTICAZIONE CON PASSWORD (OPZIONE 1)
+# -----------------------------------------
+PASSWORD = st.secrets["auth"]["password"]
+
+def check_password():
+    def password_entered():
+        if st.session_state["password"] == PASSWORD:
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        st.text_input("Inserisci la password per accedere:", type="password",
+                      on_change=password_entered, key="password")
+        st.stop()
+
+    elif not st.session_state["password_correct"]:
+        st.text_input("Password errata. Riprova:", type="password",
+                      on_change=password_entered, key="password")
+        st.stop()
+
+check_password()
+
+# -----------------------------------------
+# TITOLO
+# -----------------------------------------
 st.markdown("""
     <h1 style='text-align: center; color: #2E86C1;'>📊 Raccolta Dati – Funzioni Esecutive</h1>
     <p style='text-align: center; font-size: 16px; color: #555;'>
@@ -24,10 +52,9 @@ st.markdown("""
 # -----------------------------------------
 # CONFIGURAZIONE EMAIL
 # -----------------------------------------
-EMAIL_SENDER = "salcuniantonio00@gmail.com"
-EMAIL_PASSWORD = "esouvldgawxywvyn"
-#EMAIL_RECEIVER = "gennaro.fiananese@gmail.com"
-EMAIL_RECEIVER = "salcuniantonio00@gmail.com"   # o un’altra email se preferisci
+EMAIL_SENDER = st.secrets["email"]["sender"]
+EMAIL_PASSWORD = st.secrets["email"]["password"]
+EMAIL_RECEIVER = st.secrets["email"]["receiver"]
 
 # -----------------------------------------
 # SEZIONE 1 — DATI DEL BAMBINO
