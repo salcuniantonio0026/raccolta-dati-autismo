@@ -1,4 +1,5 @@
 #EMAIL_RECEIVER = "salcuniantonio00@gmail.com"   # o un’altra email se preferisci
+#EMAIL_RECEIVER = "salcuniantonio00@gmail.com"   # o un’altra email se preferisci
 import streamlit as st
 import smtplib
 from email.mime.text import MIMEText
@@ -54,19 +55,19 @@ st.markdown("""
 # -----------------------------------------
 EMAIL_SENDER = st.secrets["email"]["sender"]
 EMAIL_PASSWORD = st.secrets["email"]["password"]
-EMAIL_RECEIVER = st.secrets["email"]["receiver"]
+
+EMAIL_RECEIVERS = [
+    "salcuniantonio00@gmail.com",
+    "gennaro.fiananese@gmail.com",
+    "salvatorefrancescorusso@gmail.com"
+]
 
 # -----------------------------------------
 # SEZIONE 1 — DATI DEL BAMBINO
 # -----------------------------------------
 st.markdown("<h2 style='color:#1A5276;'>👤 Dati del bambino</h2>", unsafe_allow_html=True)
 
-col1, col2 = st.columns(2)
-with col1:
-    data = st.date_input("Data", value=date.today())
-with col2:
-    eta = st.text_input("Età (MM/AAAA)", help="Inserire solo mese e anno, es. 04/2010")
-
+data = st.date_input("Data", value=date.today())
 chiave = st.text_input("Chiave primaria", help="Identificativo univoco del bambino")
 
 # -----------------------------------------
@@ -262,7 +263,7 @@ def invia_email(df_row: pd.DataFrame):
     msg = MIMEText(html_body, "html")
     msg["Subject"] = "Nuova raccolta dati – Funzioni esecutive"
     msg["From"] = EMAIL_SENDER
-    msg["To"] = EMAIL_RECEIVER
+    msg["To"] = ", ".join(EMAIL_RECEIVERS)
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(EMAIL_SENDER, EMAIL_PASSWORD)
@@ -272,12 +273,11 @@ def invia_email(df_row: pd.DataFrame):
 # SUBMIT
 # -----------------------------------------
 if st.button("Invia dati"):
-    if not eta or not chiave:
-        st.error("Compila almeno Età e Chiave primaria prima di inviare.")
+    if not chiave:
+        st.error("Compila la Chiave primaria prima di inviare.")
     else:
         record = {
             "Data": data.isoformat(),
-            "Età": eta,
             "Chiave": chiave,
             "Funzione": funzione,
             "Esercizio": esercizio,
