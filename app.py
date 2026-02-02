@@ -22,14 +22,7 @@ PASSWORD = st.secrets["auth"]["password"]
 
 def check_password():
     def password_entered():
-/*************  ✨ Windsurf Command ⭐  *************/
-    """
-    Controlla se la password inserita dall'utente e corretta,
-    impostando la variabile di sessione "password_correct" a True
-    o False a seconda dell'esito. Se la password e corretta,
-    cancella la variabile di sessione "password".
-    """
-/*******  860070df-00e1-4f39-8c56-31482b0c6294  *******/
+        
         if st.session_state["password"] == PASSWORD:
             st.session_state["password_correct"] = True
             del st.session_state["password"]
