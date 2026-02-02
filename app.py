@@ -22,6 +22,14 @@ PASSWORD = st.secrets["auth"]["password"]
 
 def check_password():
     def password_entered():
+/*************  ✨ Windsurf Command ⭐  *************/
+    """
+    Controlla se la password inserita dall'utente e corretta,
+    impostando la variabile di sessione "password_correct" a True
+    o False a seconda dell'esito. Se la password e corretta,
+    cancella la variabile di sessione "password".
+    """
+/*******  860070df-00e1-4f39-8c56-31482b0c6294  *******/
         if st.session_state["password"] == PASSWORD:
             st.session_state["password_correct"] = True
             del st.session_state["password"]
@@ -290,9 +298,18 @@ if st.button("Invia dati"):
         st.success("Dati inviati correttamente. Controlla la tua email.")
         st.dataframe(df)
 
-        df.to_csv("raccolta_dati_locale.csv", mode="a", header=False, index=False)
+        # --- SALVATAGGIO CSV INCREMENTALE ---
+        import os
+        csv_path = "raccolta_dati_locale.csv"
 
+        if not os.path.exists(csv_path):
+            df.to_csv(csv_path, mode="w", header=True, index=False)
+        else:
+            df.to_csv(csv_path, mode="a", header=False, index=False)
+
+        # --- INVIO EMAIL ---
         try:
             invia_email(df)
         except Exception as e:
             st.error(f"Errore nell'invio email: {e}")
+
